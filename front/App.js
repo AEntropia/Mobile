@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, FlatList, ScrollView, SafeAreaView } from 'react-native';
 import DadosExibido from './components/Exibe';
 import DadosInsert from './components/Insert';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -119,13 +119,16 @@ export default function App() {
   */
   return (
     <PaperProvider>
-    <View style={styles.container}>
-      <ScrollView  >
-        <DadosInsert onInsert={Exibir} />
-        <DadosExibido campos={campos} onRefresh={Exibir} />
-        <StatusBar style="auto" />
-      </ScrollView>
-    </View >
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={campos}
+          keyExtractor={(item) => item._id}
+          ListHeaderComponent={<DadosInsert onInsert={Exibir} />}
+          renderItem={({ item }) => (
+            <DadosExibido item={item} onRefresh={Exibir} />
+          )}
+        />
+      </SafeAreaView>
     </PaperProvider>
   );
 }
@@ -134,8 +137,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 20,
+    paddingBottom:20 // Adiciona espaço no topo
   },
 });
 
